@@ -1,0 +1,1 @@
+export { default as __ComponentName__ } from './__ComponentName__';

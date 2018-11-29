@@ -1,28 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route } from 'react-router-dom';
+import AppTemplate from 'components/base/AppTemplate';
+import HeaderContainer from './containers/base/HeaderContainer';
+// import { AuthPage, TweetsPage } from 'pages';
+import Loadable from 'react-loadable';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+const Loading = () => {
+  return <div>Loading....</div>;
+};
+
+const MainPage = Loadable({
+  loader: () => import('./pages/TweetsPage'),
+  loading: Loading,
+  delay: 300,
+});
+
+const UserPage = Loadable({
+  loader: () => import('./pages/TweetsPage'),
+  loading: Loading,
+  delay: 300,
+});
+
+const TagPage = Loadable({
+  loader: () => import('./pages/TweetsPage'),
+  loading: Loading,
+  delay: 300,
+});
+
+const AuthPage = Loadable({
+  loader: () => import('./pages/AuthPage'),
+  loading: Loading,
+  delay: 300,
+});
+
+const App = () => {
+  return (
+    <AppTemplate header={<HeaderContainer />}>
+      <Route exact path="/" component={MainPage} />
+      <Route path="/users/:username" component={UserPage} />
+      <Route path="/tags/:tag" component={TagPage} />
+      <Route path="/:authType(login|register)" component={AuthPage} />
+    </AppTemplate>
+  );
+};
 
 export default App;
