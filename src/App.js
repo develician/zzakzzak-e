@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import AppTemplate from 'components/base/AppTemplate';
-import HeaderContainer from './containers/base/HeaderContainer';
-// import { AuthPage, TweetsPage } from 'pages';
 import Loadable from 'react-loadable';
+import AppTemplate from 'components/base/AppTemplate';
+import HeaderContainer from 'containers/base/HeaderContainer';
+import Core from 'containers/base/Core';
+// import { AuthPage, TweetsPage } from 'pages';
 
 const Loading = () => {
   return <div>Loading....</div>;
@@ -40,6 +41,7 @@ const App = () => {
       <Route path="/users/:username" component={UserPage} />
       <Route path="/tags/:tag" component={TagPage} />
       <Route path="/:authType(login|register)" component={AuthPage} />
+      <Core />
     </AppTemplate>
   );
 };

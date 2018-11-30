@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as authActions from 'store/modules/auth';
+import * as userActions from 'store/modules/user';
+import { saveUser } from 'lib/common';
 import AuthForm from 'components/auth/AuthForm';
 
 class AuthFormContainer extends Component {
@@ -20,9 +22,60 @@ class AuthFormContainer extends Component {
     history.goBack();
   };
 
-  handleRegister = async () => {};
+  handleRegister = async () => {
+    const { fields, AuthActions, UserActions } = this.props;
+    const { username, password, passwordConfirm } = fields;
 
-  handleLogin = async () => {};
+    if (password !== passwordConfirm) {
+      AuthActions.setError('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    if (!/^[a-z-0-9-_]{3,15}$/.test(username)) {
+      AuthActions.setError('계정명은 3~15자의 영소문자/숫자여야 합니다.');
+      return;
+    }
+
+    if (password.length < 6) {
+      AuthActions.setError('비밀번호가 너무 짧습니다.');
+      return;
+    }
+
+    try {
+      await AuthActions.register({
+        username,
+        password,
+      });
+      await UserActions.checkAuth();
+      saveUser(this.props.user);
+      this.props.history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  handleLogin = async () => {
+    const { fields, AuthActions, UserActions } = this.props;
+    const { username, password } = fields;
+
+    try {
+      if (!username) {
+        AuthActions.setError('아이디를 입력하세요.');
+        return;
+      }
+
+      if (!password) {
+        AuthActions.setError('비밀번호를 입력하세요.');
+        return;
+      }
+      await AuthActions.login({ username, password });
+      await UserActions.checkAuth();
+      saveUser(this.props.user);
+      this.props.history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   componentDidMount() {
     const { AuthActions } = this.props;
@@ -54,9 +107,14 @@ class AuthFormContainer extends Component {
 const enhance = compose(
   withRouter,
   connect(
-    ({ auth }) => ({ fields: auth.fields, error: auth.error }),
+    ({ auth, user }) => ({
+      fields: auth.fields,
+      error: auth.error,
+      user: user.user,
+    }),
     dispatch => ({
       AuthActions: bindActionCreators(authActions, dispatch),
+      UserActions: bindActionCreators(userActions, dispatch),
     })
   )
 );

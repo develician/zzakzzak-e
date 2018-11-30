@@ -1,5 +1,5 @@
-import React, { ComponentType } from 'react';
-import { Button } from 'components/common/Button';
+import React from 'react';
+import Button from 'components/common/Button';
 import './AuthForm.scss';
 
 class AuthForm extends React.Component {
