@@ -99,12 +99,21 @@ class TweetItemListContainer extends Component {
     this.lastCursor = lastId;
   };
 
+  handleOpenRemoveModal = ({ id, needPass }) => {
+    const { TweetActions } = this.props;
+    TweetActions.openRemoveModal({ id, needPass });
+  };
+
   render() {
     const { list, username, loading, loadingNext } = this.props;
     if (loading) return <Loading />;
     return (
       <Fragment>
-        <TweetItemList tweets={list} currentUser={username} />
+        <TweetItemList
+          tweets={list}
+          currentUser={username}
+          onRemove={this.handleOpenRemoveModal}
+        />
         {loadingNext && <Loading />}
       </Fragment>
     );

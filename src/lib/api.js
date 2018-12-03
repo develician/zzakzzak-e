@@ -29,3 +29,6 @@ export const getList = ({ cursor, recent, username, tag } = {}) => {
   });
   return client.get(`/api/tweets?${query}`);
 };
+
+export const remove = ({ id, pass }) =>
+  client.delete(`/api/tweets/${id}/?${pass ? `pass=${pass}` : ''}`);

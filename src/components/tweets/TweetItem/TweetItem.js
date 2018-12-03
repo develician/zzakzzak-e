@@ -1,6 +1,7 @@
 import React from 'react';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import ko from 'date-fns/locale/ko';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import { Link } from 'react-router-dom';
 import './TweetItem.scss';
 // import classNames from 'classnames/bind';
@@ -35,7 +36,14 @@ const TweetItem = ({ tweet, onRemove, currentUser }) => {
         <div className="date">
           {distanceInWordsToNow(createdAt, { locale: ko, addSuffix: true })}
         </div>
-        {removable && <div className="remove">[삭제]</div>}
+        {removable && (
+          <div
+            className="remove"
+            onClick={() => onRemove({ id: _id, needPass: writer.anonymous })}
+          >
+            [삭제]
+          </div>
+        )}
       </div>
       <div className="text">{text}</div>
       {tags.length > 0 && <div className="tags">{tagItems}</div>}
@@ -58,4 +66,4 @@ TweetItem.defaultProps = {
   },
 };
 
-export default TweetItem;
+export default onlyUpdateForKeys(['tweet', 'currentUser'])(TweetItem);

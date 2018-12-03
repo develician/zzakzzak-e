@@ -81,6 +81,8 @@ const serverRender = async (req, res) => {
       }
     });
 
+    console.log(promises);
+
     await Promise.all(promises);
 
     let modules = [];
@@ -96,6 +98,8 @@ const serverRender = async (req, res) => {
     );
 
     const state = store.getState();
+
+    console.log(JSON.stringify(state));
 
     const bundles = getBundles(stats, modules);
 
