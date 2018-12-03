@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import penderMiddleware from 'redux-pender';
 import modules from './modules';
 
-const configure = () => {
+const configure = initialState => {
   const devTools =
     typeof window !== 'undefined' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
@@ -12,6 +12,7 @@ const configure = () => {
 
   const store = createStore(
     modules,
+    initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );
 

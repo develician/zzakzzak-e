@@ -5,9 +5,10 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import configure from 'store/configure';
-import * as serviceWorker from './serviceWorker';
+import Loadable from 'react-loadable';
+// import * as serviceWorker from './serviceWorker';
 
-const store = configure();
+const store = configure(window.__PRELOADED_STATE__);
 
 const rootElement = document.getElementById('root');
 
@@ -20,12 +21,16 @@ const app = (
 );
 
 if (window.ssr) {
-  ReactDOM.hydrate(app, rootElement);
+  Loadable.preloadReady().then(() => {
+    ReactDOM.hydrate(app, rootElement);
+  });
+  console.log('hydrate');
 } else {
   ReactDOM.render(app, rootElement);
+  console.log('just render');
 }
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();

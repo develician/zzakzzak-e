@@ -7,6 +7,7 @@ import { getScrollTop, getScrollBottom } from 'lib/common';
 import * as tweetActions from 'store/modules/tweets';
 import TweetItemList from 'components/tweets/TweetItemList';
 import Loading from 'components/common/Loading';
+import shouldCancel from 'lib/shouldCancel';
 
 function mapStateToProps({ tweets, user, pender }) {
   return {
@@ -20,6 +21,7 @@ function mapStateToProps({ tweets, user, pender }) {
       tweets.list[tweets.list.length - 1] &&
       tweets.list[tweets.list.length - 1]._id,
     loadingNext: pender.pending['tweets/GET_NEXT'],
+    firstId: tweets.list && tweets.list[0] && tweets.list[0]._id,
   };
 }
 
@@ -49,6 +51,11 @@ class TweetItemListContainer extends Component {
   };
 
   initialize = async () => {
+    // if (window.ssr) {
+    //   return;
+    // }
+    if (shouldCancel()) return;
+
     const {
       TweetActions,
       match: { params },
@@ -99,12 +106,21 @@ class TweetItemListContainer extends Component {
     this.lastCursor = lastId;
   };
 
+  handleOpenRemoveModal = ({ id, needPass }) => {
+    const { TweetActions } = this.props;
+    TweetActions.openRemoveModal({ id, needPass });
+  };
+
   render() {
     const { list, username, loading, loadingNext } = this.props;
     if (loading) return <Loading />;
     return (
       <Fragment>
-        <TweetItemList tweets={list} currentUser={username} />
+        <TweetItemList
+          tweets={list}
+          currentUser={username}
+          onRemove={this.handleOpenRemoveModal}
+        />
         {loadingNext && <Loading />}
       </Fragment>
     );

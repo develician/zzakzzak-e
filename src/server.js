@@ -73,9 +73,11 @@ const serverRender = async (req, res) => {
     const store = configure();
 
     const promises = [];
+    let matched = false;
     prefetchConfig.forEach(route => {
       const match = matchPath(req.path, route);
       if (match) {
+        matched = true;
         const p = route.prefetch(store, match.params);
         promises.push(p);
       }
@@ -98,6 +100,11 @@ const serverRender = async (req, res) => {
     const state = store.getState();
 
     const bundles = getBundles(stats, modules);
+
+    if (!matched) {
+      res.status(404).send(createPage(rootHtml, bundles, state));
+      return;
+    }
 
     res.send(createPage(rootHtml, bundles, state));
   } catch (e) {

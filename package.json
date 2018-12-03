@@ -56,6 +56,7 @@
     "react-loadable": "^5.5.0",
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",
+    "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
     "redux-pender": "^2.0.9",
@@ -74,7 +75,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "build:server": "node scripts/build.server.js",
-    "start:ssr": "node ./dist/server"
+    "start:ssr": "node ./dist/server",
+    "hit": "node scripts/build.js && node scripts/build.server.js && node ./dist/server"
   },
   "eslintConfig": {
     "extends": "react-app"
